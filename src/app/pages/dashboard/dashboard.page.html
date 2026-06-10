@@ -1,0 +1,162 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="top-bar">
+
+      <div class="user-info">
+        <div class="avatar-sm" [routerLink]="'/dashboard'">
+          {{ (usuario?.nombre || 'U').charAt(0) }}
+        </div>
+        <div>
+          <h1>Hola, {{ usuario?.nombre || 'Usuario' }} 👋</h1>
+        </div>
+      </div>
+
+      <button class="add-btn" [routerLink]="'/vehiculos'">
+        <i class="fas fa-plus"></i>
+      </button>
+
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="dash-content">
+    <div class="vehicle-hero" *ngIf="vehiculoPrincipal">
+
+      <div class="hero-top">
+        <span class="model-badge">
+          {{ vehiculoPrincipal.marca }}
+          {{ vehiculoPrincipal.modelo }}
+          {{ vehiculoPrincipal.anio }}
+        </span>
+        <i class="fas fa-car hero-icon"></i>
+      </div>
+
+      <h2 class="plate-text">{{ vehiculoPrincipal.placa }}</h2>
+
+      <div class="alert-box">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div>
+          <small>Mantenimiento Próximo</small>
+          <strong>Cambio de aceite - En 15 días</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <div
+      class="vehicle-hero empty-hero"
+      *ngIf="!vehiculoPrincipal"
+      [routerLink]="'/vehiculos'"
+    >
+      <div class="empty-vehicle-msg">
+        <i class="fas fa-car"></i>
+        <p>Agrega tu primer vehículo</p>
+        <span>Toca aquí para comenzar</span>
+      </div>
+    </div>
+
+    <h3 class="section-title">Acceso rápido</h3>
+
+    <div class="menu-grid">
+      <div
+        class="menu-card"
+        *ngFor="let item of menu"
+        [routerLink]="item.ruta"
+      >
+        <div class="menu-icon-box" [ngClass]="item.color">
+          <i [class]="item.icono"></i>
+        </div>
+        <span>{{ item.nombre }}</span>
+      </div>
+    </div>
+
+    <div class="gasto-card">
+      <div class="gasto-row">
+        <small>GASTO MENSUAL</small>
+        <strong>${{ totalGastosMes | number }}</strong>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <p class="gasto-note">15% más que el mes pasado</p>
+    </div>
+
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'vehiculos'"
+    routerLink="/vehiculos"
+    (click)="activeTab = 'vehiculos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-car-side"></i>
+    </div>
+    <span>Vehículos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'mantenimientos'"
+    routerLink="/mantenimientos"
+    (click)="activeTab = 'mantenimientos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-screwdriver-wrench"></i>
+    </div>
+    <span>Mantenimiento</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'gastos'"
+    routerLink="/gastos"
+    (click)="activeTab = 'gastos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-money-bill-wave"></i>
+    </div>
+    <span>Gastos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'alertas'"
+    routerLink="/recordatorios"
+    (click)="activeTab = 'alertas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-bell"></i>
+    </div>
+    <span>Notificaciones</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'estadisticas'"
+    routerLink="/estadisticas"
+    (click)="activeTab = 'estadisticas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <span>Estadísticas</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'perfil'"
+    routerLink="/perfil"
+    (click)="activeTab = 'perfil'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-user"></i>
+    </div>
+    <span>Perfil</span>
+  </div>
+
+</div>

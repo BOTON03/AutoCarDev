@@ -1,0 +1,387 @@
+ion-content {
+  --background: #00111f;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 10px;
+  --padding-bottom: 100px;
+}
+
+ion-toolbar {
+  --background: #00111f;
+}
+
+.page-content {
+  padding-bottom: 10px;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #1a3a6b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  i {
+    font-size: 20px;
+    color: #7aaeff;
+  }
+}
+
+.page-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+}
+
+.add-btn-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #1a4fa8;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  i {
+    font-size: 20px;
+    color: white;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  border-radius: 18px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-blue {
+  background: #1a4fa8;
+}
+
+.stat-dark {
+  background: #0d2238;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: rgba(255,255,255,.65);
+  font-weight: 500;
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+
+.stat-green {
+  color: #32d48e;
+}
+
+.filtros-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.filtro-btn {
+  padding: 10px 18px;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: transparent;
+  color: #8aaad4;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &.active {
+    background: white;
+    color: #0d1f35;
+    border-color: white;
+    font-weight: 700;
+  }
+}
+
+.mant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mant-card {
+  background: #0d2238;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.06);
+  padding: 20px 20px 0;
+  overflow: hidden;
+}
+
+/* FILA SUPERIOR */
+.mant-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.mant-icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: #162d48;
+  border: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  i {
+    font-size: 24px;
+    color: #7aaeff;
+  }
+}
+
+.mant-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mant-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mant-nombre {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  flex: 1;
+}
+
+.estado-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-pendiente {
+  background: transparent;
+  border: 1.5px solid #f5a623;
+  color: #f5a623;
+}
+
+.badge-completado {
+  background: transparent;
+  border: 1.5px solid #32d48e;
+  color: #32d48e;
+}
+
+.mant-placa {
+  font-size: 14px;
+  color: #6b8ab0;
+}
+
+.mant-divider {
+  height: 1px;
+  background: rgba(255,255,255,.07);
+  margin: 0 -20px;
+}
+
+.mant-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.mant-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  small {
+    font-size: 11px;
+    color: #6b8ab0;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  strong {
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+  }
+}
+
+.mant-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 14px 10px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  text-align: center;
+}
+
+.completar-btn {
+  border: 1.5px solid #32d48e;
+  color: #32d48e;
+}
+
+.detalles-btn {
+  border: 1.5px solid rgba(255,255,255,.15);
+  color: #6b8ab0;
+}
+
+.delete-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255,60,60,.08);
+  border: 1px solid rgba(255,60,60,.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  i {
+    font-size: 18px;
+    color: #e05555;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 14px;
+  text-align: center;
+}
+
+.empty-icon-box {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+
+  i {
+    font-size: 34px;
+    color: #3a5a80;
+  }
+}
+
+.empty-state h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+  font-weight: 600;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b8ab0;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: #081a2c;
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 -6px 24px rgba(0,0,0,.35);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: #5a7399;
+  font-size: 11px;
+  cursor: pointer;
+  flex: 1;
+  transition: color 0.2s;
+
+  i { color: #5a7399; transition: color 0.2s; }
+
+  &.active {
+    color: white;
+    .nav-icon { background: #1a6bff; border-radius: 16px; }
+    i { color: white; }
+  }
+}
+
+.nav-icon {
+  width: 50px;
+  height: 40px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  transition: background 0.2s;
+
+  i { font-size: 19px; }
+}

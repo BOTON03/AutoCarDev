@@ -1,0 +1,161 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="top-bar">
+      <div class="header-left">
+        <i class="fas fa-car header-icon"></i>
+        <h1 class="page-title">Perfil</h1>
+      </div>
+      <button class="edit-btn" (click)="editarPerfil()">
+        <i class="fas fa-circle-user"></i>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+
+    <div class="profile-card">
+      <div class="avatar-circle">
+        <span>{{ getIniciales() }}</span>
+      </div>
+      <h2 class="profile-name">{{ usuario?.nombre || 'Usuario' }}</h2>
+      <p class="profile-email">{{ usuario?.email || 'sin.email@example.com' }}</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-icon-box">
+        <i class="fas fa-car"></i>
+      </div>
+      <span class="info-label">Vehículos registrados</span>
+      <span class="info-value">{{ vehiculos.length }}</span>
+    </div>
+
+    <div class="config-label">CONFIGURACIÓN</div>
+
+    <div class="config-card">
+
+      <div class="config-row">
+        <div class="config-icon-box icon-orange">
+          <i class="fas fa-bell"></i>
+        </div>
+        <span class="config-texto">Notificaciones</span>
+        <div class="toggle-wrapper">
+          <input
+            type="checkbox"
+            id="toggle-notif"
+            class="toggle-input"
+            [(ngModel)]="notificaciones"
+            (change)="guardarConfig()"
+          />
+          <label for="toggle-notif" class="toggle-label"></label>
+        </div>
+      </div>
+
+      <div class="config-divider"></div>
+
+      <div class="config-row" (click)="cambiarUnidades()">
+        <div class="config-icon-box icon-green">
+          <i class="fas fa-earth-americas"></i>
+        </div>
+        <span class="config-texto">Unidades</span>
+        <span class="config-badge">{{ unidades }}</span>
+      </div>
+
+      <div class="config-divider"></div>
+
+      <div class="config-row" (click)="cambiarMoneda()">
+        <div class="config-icon-box icon-purple">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <span class="config-texto">Moneda</span>
+        <span class="config-badge">{{ moneda }}</span>
+      </div>
+
+      <div class="config-divider"></div>
+
+      <div class="config-row" (click)="respaldarDatos()">
+        <div class="config-icon-box icon-light">
+          <i class="fas fa-cloud-arrow-up"></i>
+        </div>
+        <span class="config-texto">Respaldo de datos</span>
+        <i class="fas fa-chevron-right config-arrow"></i>
+      </div>
+
+    </div>
+
+    <button class="logout-btn" (click)="cerrarSesion()">
+      <i class="fas fa-right-from-bracket"></i>
+      Cerrar sesión
+    </button>
+
+    <p class="version-text">AutoCare v1.0.0</p>
+
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'vehiculos'"
+    routerLink="/vehiculos"
+    (click)="activeTab = 'vehiculos'"
+  >
+    <div class="nav-icon"><i class="fas fa-car-side"></i></div>
+    <span>Vehículos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'mantenimientos'"
+    routerLink="/mantenimientos"
+    (click)="activeTab = 'mantenimientos'"
+  >
+    <div class="nav-icon"><i class="fas fa-screwdriver-wrench"></i></div>
+    <span>Mantenimiento</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'gastos'"
+    routerLink="/gastos"
+    (click)="activeTab = 'gastos'"
+  >
+    <div class="nav-icon"><i class="fas fa-money-bill-wave"></i></div>
+    <span>Gastos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'recordatorios'"
+    routerLink="/recordatorios"
+    (click)="activeTab = 'recordatorios'"
+  >
+    <div class="nav-icon"><i class="fas fa-bell"></i></div>
+    <span>Notificaciones</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'estadisticas'"
+    routerLink="/estadisticas"
+    (click)="activeTab = 'estadisticas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <span>Estadísticas</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'perfil'"
+    routerLink="/perfil"
+    (click)="activeTab = 'perfil'"
+  >
+    <div class="nav-icon"><i class="fas fa-user"></i></div>
+    <span>Perfil</span>
+  </div>
+
+</div>

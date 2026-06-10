@@ -1,0 +1,158 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { StorageService } from '../../services/storage';
+import { VehiculoFormComponent } from '../../components/vehiculo-form/vehiculo-form.component';
+// VehiculoDetalleFormComponent imported dynamically in verDetalle to avoid build-time module not found errors
+
+@Component({
+  selector: 'app-vehiculos',
+  templateUrl: './vehiculos.page.html',
+  styleUrls: ['./vehiculos.page.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, IonicModule]
+})
+export class VehiculosPage implements OnInit {
+
+  vehiculos: any[] = [];
+  activeTab: string = 'vehiculos';
+  usuario: any;
+
+  constructor(
+    private storage: StorageService,
+    private modalController: ModalController,
+    private router: Router
+  ) {}
+
+  async ngOnInit() {
+    await this.cargarVehiculos();
+  }
+
+  async ionViewWillEnter() {
+    await this.cargarVehiculos();
+  }
+
+  async cargarVehiculos() {
+    this.vehiculos = (await this.storage.get('vehiculos')) || [];
+  }
+
+  async nuevoVehiculo() {
+    const modal = await this.modalController.create({
+      component: VehiculoFormComponent
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data) {
+      this.vehiculos.push(data);
+      await this.storage.set('vehiculos', this.vehiculos);
+      await this.cargarVehiculos();
+    }
+  }
+
+  async editarVehiculo(vehiculo: any) {
+    const modal = await this.modalController.create({
+      component: VehiculoFormComponent,
+      componentProps: { vehiculo }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data) {
+      const index = this.vehiculos.findIndex(v => v.id === vehiculo.id);
+
+      if (index !== -1) {
+        this.vehiculos[index] = data;
+        await this.storage.set('vehiculos', this.vehiculos);
+        await this.cargarVehiculos();
+      }
+    }
+  }
+
+  async eliminarVehiculo(vehiculo: any) {
+    if (confirm(`¿Eliminar vehículo ${vehiculo.placa}?`)) {
+      this.vehiculos = this.vehiculos.filter(v => v.id !== vehiculo.id);
+      await this.storage.set('vehiculos', this.vehiculos);
+      await this.cargarVehiculos();
+    }
+  }
+
+  async verDetalle(vehiculo: any) {
+    const modal = await this.modalController.create({
+      component: VehiculoFormComponent,
+      componentProps: {
+        vehiculo
+      }
+    });
+
+    await modal.present();
+  }
+
+  getIconClass(v: any): string {
+    switch (v.combustible?.toLowerCase()) {
+      case 'eléctrico':
+        return 'icon-dark';
+
+      case 'híbrido':
+        return 'icon-blue';
+
+      case 'gasolina':
+        return 'icon-blue';
+
+      case 'diesel':
+        return 'icon-gray';
+
+      default:
+        return 'icon-blue';
+    }
+  }
+
+  getStatusClass(estado: string): string {
+    switch (estado?.toLowerCase()) {
+      case 'activo':
+        return 'badge-activo';
+
+      case 'en taller':
+        return 'badge-taller';
+
+      default:
+        return 'badge-inactivo';
+    }
+  }
+
+  getFuelIcon(combustible: string): string {
+    switch (combustible?.toLowerCase()) {
+      case 'eléctrico':
+        return 'fas fa-bolt';
+
+      case 'híbrido':
+        return 'fas fa-leaf';
+
+      case 'diesel':
+        return 'fas fa-droplet';
+
+      default:
+        return 'fas fa-gas-pump';
+    }
+  }
+
+  getServiceClass(proximoService: string): string {
+    if (!proximoService) {
+      return 'service-ok';
+    }
+
+    return proximoService.toLowerCase() === 'vencido'
+      ? 'service-vencido'
+      : 'service-ok';
+  }
+
+  esElectrico(v: any): boolean {
+    return v.combustible?.toLowerCase() === 'eléctrico';
+  }
+}

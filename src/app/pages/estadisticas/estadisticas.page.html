@@ -1,0 +1,172 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="top-bar">
+      <div class="header-left">
+        <i class="fas fa-car header-icon"></i>
+        <h1 class="page-title">Estadísticas</h1>
+      </div>
+      <button class="share-btn" (click)="compartir()">
+        <i class="fas fa-share-nodes"></i>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+
+    <div class="periodos-row">
+      <button class="periodo-btn" [class.active]="periodo === '1mes'"   (click)="setPeriodo('1mes')">1 mes</button>
+      <button class="periodo-btn" [class.active]="periodo === '3meses'" (click)="setPeriodo('3meses')">3 meses</button>
+      <button class="periodo-btn" [class.active]="periodo === '6meses'" (click)="setPeriodo('6meses')">6 meses</button>
+      <button class="periodo-btn" [class.active]="periodo === 'año'"    (click)="setPeriodo('año')">Año</button>
+    </div>
+
+    <div class="stat-section">
+      <div class="section-title-row">
+        <i class="fas fa-chart-bar section-icon"></i>
+        <span>Gastos por Categoría</span>
+      </div>
+
+      <div class="categoria-list">
+        <div class="categoria-row" *ngFor="let c of gastosPorCategoria">
+          <div class="cat-label-row">
+            <span class="cat-nombre">{{ c.nombre }}</span>
+            <span class="cat-monto">${{ c.monto | number:'1.2-2' }}</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="c.porcentaje" [ngClass]="c.color"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-section">
+      <div class="section-title-row">
+        <i class="fas fa-circle-half-stroke section-icon"></i>
+        <span>Distribución de Gastos</span>
+      </div>
+
+      <div class="donut-row">
+        <div class="donut-container">
+          <svg viewBox="0 0 120 120" class="donut-svg">
+            <circle cx="60" cy="60" r="46" fill="none" stroke="#0d2238" stroke-width="18"/>
+            <circle
+              *ngFor="let seg of donutSegmentos"
+              cx="60" cy="60" r="46"
+              fill="none"
+              [attr.stroke]="seg.color"
+              stroke-width="18"
+              [attr.stroke-dasharray]="seg.dash"
+              [attr.stroke-dashoffset]="seg.offset"
+              stroke-linecap="butt"
+              transform="rotate(-90 60 60)"
+            />
+          </svg>
+          <div class="donut-center">
+            <span class="donut-valor">{{ totalFormateado }}</span>
+            <span class="donut-label">TOTAL</span>
+          </div>
+        </div>
+
+        <div class="donut-leyenda">
+          <div class="leyenda-item" *ngFor="let c of gastosPorCategoria">
+            <span class="leyenda-dot" [ngClass]="c.color"></span>
+            <span>{{ c.nombre }} ({{ c.porcentaje | number:'1.0-0' }}%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-section">
+      <div class="section-title-row">
+        <i class="fas fa-table-list section-icon"></i>
+        <span>Comparativa por Vehículo</span>
+      </div>
+
+      <div class="tabla-header">
+        <span>Matrícula</span>
+        <span>Gasto Total</span>
+      </div>
+
+      <div class="tabla-divider"></div>
+
+      <div class="tabla-row" *ngFor="let v of gastosPorVehiculo; let last = last">
+        <span class="tabla-placa">{{ v.placa }}</span>
+        <span class="tabla-monto">${{ v.total | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <button class="export-btn" (click)="exportarPDF()">
+      <i class="fas fa-file-pdf"></i>
+      Exportar reporte en PDF
+    </button>
+
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'vehiculos'"
+    routerLink="/tabs/vehiculos"
+    (click)="activeTab = 'vehiculos'"
+  >
+    <div class="nav-icon"><i class="fas fa-car-side"></i></div>
+    <span>Vehículos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'mantenimientos'"
+    routerLink="/tabs/mantenimientos"
+    (click)="activeTab = 'mantenimientos'"
+  >
+    <div class="nav-icon"><i class="fas fa-screwdriver-wrench"></i></div>
+    <span>Mantenimiento</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'gastos'"
+    routerLink="/tabs/gastos"
+    (click)="activeTab = 'gastos'"
+  >
+    <div class="nav-icon"><i class="fas fa-money-bill-wave"></i></div>
+    <span>Gastos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'recordatorios'"
+    routerLink="/recordatorios"
+    (click)="activeTab = 'recordatorios'"
+  >
+    <div class="nav-icon"><i class="fas fa-bell"></i></div>
+    <span>Notificaciones</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'estadisticas'"
+    routerLink="/estadisticas"
+    (click)="activeTab = 'estadisticas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <span>Estadísticas</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'perfil'"
+    routerLink="/perfil"
+    (click)="activeTab = 'perfil'"
+  >
+    <div class="nav-icon"><i class="fas fa-user"></i></div>
+    <span>Perfil</span>
+  </div>
+
+</div>

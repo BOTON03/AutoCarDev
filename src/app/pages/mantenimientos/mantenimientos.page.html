@@ -1,0 +1,233 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="top-bar">
+
+      <div class="header-left">
+        <div class="avatar-icon">
+          <i class="fas fa-user"></i>
+        </div>
+        <h1 class="page-title">Mantenimientos</h1>
+      </div>
+
+      <button class="add-btn-circle" (click)="nuevoMantenimiento()">
+        <i class="fas fa-plus"></i>
+      </button>
+
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+
+    <div class="stats-grid">
+
+      <div class="stat-card stat-blue">
+        <span class="stat-label">Total</span>
+        <span class="stat-number">{{ mantenimientos.length | number:'2.0' }}</span>
+      </div>
+
+      <div class="stat-card stat-dark">
+        <span class="stat-label">Pendientes</span>
+        <span class="stat-number">{{ mantenimientosPendientes.length | number:'2.0' }}</span>
+      </div>
+
+      <div class="stat-card stat-dark">
+        <span class="stat-label">Completados</span>
+        <span class="stat-number stat-green">{{ mantenimientosCompletados.length | number:'2.0' }}</span>
+      </div>
+
+    </div>
+
+    <div class="filtros-row">
+
+      <button
+        class="filtro-btn"
+        [class.active]="filtroActual === 'todos'"
+        (click)="filtrarPorTipo('todos')"
+      >
+        Todos
+      </button>
+
+      <button
+        class="filtro-btn"
+        [class.active]="filtroActual === 'preventivo'"
+        (click)="filtrarPorTipo('preventivo')"
+      >
+        Preventivos
+      </button>
+
+      <button
+        class="filtro-btn"
+        [class.active]="filtroActual === 'correctivo'"
+        (click)="filtrarPorTipo('correctivo')"
+      >
+        Correctivos
+      </button>
+
+    </div>
+
+    <div class="mant-list" *ngIf="mantenimientosFiltrados.length > 0">
+
+      <div
+        class="mant-card"
+        *ngFor="let m of mantenimientosFiltrados"
+      >
+        <div class="mant-top">
+
+          <div class="mant-icon-box">
+            <i [class]="getMantIcon(m.tipo)"></i>
+          </div>
+
+          <div class="mant-info">
+            <div class="mant-header-row">
+              <span class="mant-nombre">{{ m.descripcion }}</span>
+              <span class="estado-badge" [ngClass]="getEstadoClass(m.estado)">
+                {{ m.estado | uppercase }}
+              </span>
+            </div>
+            <span class="mant-placa">{{ getPlacaVehiculo(m.vehiculoId) }}</span>
+          </div>
+
+        </div>
+
+        <div class="mant-divider"></div>
+
+        <div class="mant-stats">
+
+          <div class="mant-stat">
+            <small>FECHA</small>
+            <strong>{{ m.fecha | date:'dd MMM' }}</strong>
+          </div>
+
+          <div class="mant-stat">
+            <small>KM</small>
+            <strong>{{ m.kilometraje | number }}</strong>
+          </div>
+
+          <div class="mant-stat">
+            <small>COSTO</small>
+            <strong>${{ m.costo | number:'1.2-2' }}</strong>
+          </div>
+
+        </div>
+
+        <div class="mant-divider"></div>
+
+        <div class="mant-actions">
+
+          <!-- Botón Completar-->
+          <button
+            class="action-btn completar-btn"
+            *ngIf="m.estado !== 'completado'"
+            (click)="cambiarEstado(m)"
+          >
+            Completar
+          </button>
+
+          <!-- Botón Detalles -->
+          <button
+            class="action-btn detalles-btn"
+            *ngIf="m.estado === 'completado'"
+            (click)="verDetalles(m)"
+          >
+            Detalles
+          </button>
+
+          <!-- Botón Eliminar -->
+          <button class="delete-btn" (click)="eliminarMantenimiento(m)">
+            <i class="fas fa-trash-can"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="empty-state" *ngIf="mantenimientosFiltrados.length === 0">
+      <div class="empty-icon-box">
+        <i class="fas fa-screwdriver-wrench"></i>
+      </div>
+      <h3>No hay mantenimientos registrados</h3>
+      <p>Agrega tu primer mantenimiento presionando el botón +</p>
+    </div>
+
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'vehiculos'"
+    routerLink="/vehiculos"
+    (click)="activeTab = 'vehiculos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-car-side"></i>
+    </div>
+    <span>Vehículos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'mantenimientos'"
+    routerLink="/mantenimientos"
+    (click)="activeTab = 'mantenimientos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-screwdriver-wrench"></i>
+    </div>
+    <span>Mantenimiento</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'gastos'"
+    routerLink="/gastos"
+    (click)="activeTab = 'gastos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-money-bill-wave"></i>
+    </div>
+    <span>Gastos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'recordatorios'"
+    routerLink="/recordatorios"
+    (click)="activeTab = 'recordatorios'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-bell"></i>
+    </div>
+    <span>Notificaciones</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'estadisticas'"
+    routerLink="/estadisticas"
+    (click)="activeTab = 'estadisticas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <span>Estadísticas</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'perfil'"
+    routerLink="/perfil"
+    (click)="activeTab = 'perfil'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-user"></i>
+    </div>
+    <span>Perfil</span>
+  </div>
+
+</div>

@@ -1,0 +1,155 @@
+<div class="modal-wrapper">
+
+  <div class="modal-header">
+    <div class="modal-header-left">
+      <div class="modal-icon-box icon-yellow">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div>
+        <h2 class="modal-title">{{ esEdicion ? 'Editar Recordatorio' : 'Nuevo Recordatorio' }}</h2>
+        <p class="modal-subtitle">{{ esEdicion ? 'Actualiza los datos' : 'Configura un aviso para tu vehículo' }}</p>
+      </div>
+    </div>
+    <button class="close-btn" (click)="cerrar()">
+      <i class="fas fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-car label-icon"></i> Vehículo
+      </label>
+      <div class="select-wrapper">
+        <select class="form-select" [(ngModel)]="form.vehiculoId">
+          <option value="" disabled selected>Selecciona un vehículo</option>
+          <option *ngFor="let v of vehiculos" [value]="v.id">
+            {{ v.placa }} — {{ v.marca }} {{ v.modelo }}
+          </option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-tag label-icon"></i> Tipo de recordatorio
+      </label>
+      <div class="chips-group">
+        <button
+          class="chip"
+          *ngFor="let t of tipos"
+          [class.active]="form.tipo === t.valor"
+          (click)="form.tipo = t.valor; form.titulo = t.titulo"
+        >
+          <i [class]="t.icono"></i> {{ t.label }}
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-pen label-icon"></i> Título
+      </label>
+      <input
+        class="form-input"
+        type="text"
+        placeholder="Ej: Seguro Obligatorio (SOAT)"
+        [(ngModel)]="form.titulo"
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-align-left label-icon"></i> Descripción
+        <span class="label-optional">opcional</span>
+      </label>
+      <input
+        class="form-input"
+        type="text"
+        placeholder="Ej: Vence pronto"
+        [(ngModel)]="form.descripcion"
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-calendar-xmark label-icon"></i> Fecha de vencimiento
+      </label>
+      <input
+        class="form-input"
+        type="date"
+        [(ngModel)]="form.fechaVencimiento"
+        [min]="hoy"
+      />
+    </div>
+
+    <div class="urgencia-preview" *ngIf="form.fechaVencimiento">
+      <div class="urgencia-dot" [ngClass]="getUrgenciaClass()"></div>
+      <span class="urgencia-texto" [ngClass]="getUrgenciaClass()">
+        {{ getDiasRestantes() }} días restantes
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-bell label-icon"></i> Avisar con anticipación
+      </label>
+      <div class="chips-group">
+        <button
+          class="chip"
+          *ngFor="let a of anticipaciones"
+          [class.active]="form.diasAviso === a.valor"
+          (click)="form.diasAviso = a.valor"
+        >
+          {{ a.label }}
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <i class="fas fa-rotate label-icon"></i> Repetición
+      </label>
+      <div class="select-wrapper">
+        <select class="form-select" [(ngModel)]="form.repeticion">
+          <option value="ninguna">Sin repetición</option>
+          <option value="mensual">Mensual</option>
+          <option value="trimestral">Trimestral</option>
+          <option value="semestral">Semestral</option>
+          <option value="anual">Anual</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <i class="fas fa-bell-ring label-icon"></i>
+          <span class="form-label-inline">Notificación activa</span>
+        </div>
+        <div class="toggle-wrapper">
+          <input
+            type="checkbox"
+            id="toggle-notif"
+            class="toggle-input"
+            [(ngModel)]="form.activo"
+          />
+          <label for="toggle-notif" class="toggle-label"></label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn-cancel" (click)="cerrar()">Cancelar</button>
+    <button class="btn-save btn-yellow" (click)="guardar()" [disabled]="!formValido()">
+      <i class="fas fa-floppy-disk"></i>
+      {{ esEdicion ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </div>
+
+</div>

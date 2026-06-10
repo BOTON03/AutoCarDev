@@ -1,0 +1,77 @@
+<ion-content class="login-content" [fullscreen]="true">
+
+  <!-- Header con logo -->
+  <div class="splash-area" *ngIf="modo === 'login'">
+    <div class="logo-box">
+      <i class="fas fa-car"></i>
+    </div>
+    <h1 class="app-title">AutoCare</h1>
+  </div>
+
+  <div class="splash-area" *ngIf="modo === 'registro'">
+    <div class="logo-box">
+      <ion-icon name="car-outline"></ion-icon>
+    </div>
+    <h1 class="app-title">AutoCare</h1>
+  </div>
+
+  <!-- Card principal -->
+  <div class="form-card">
+
+    <!-- Tabs -->
+    <div class="tab-pills">
+      <button class="tab-pill" [class.active]="modo === 'login'" (click)="modo = 'login'">
+        Iniciar sesión
+      </button>
+      <button class="tab-pill" [class.active]="modo === 'registro'" (click)="modo = 'registro'">
+        Registrarse
+      </button>
+    </div>
+
+    <!-- LOGIN -->
+    <div *ngIf="modo === 'login'" class="form-body">
+      <div class="field-group">
+        <label>Correo electrónico</label>
+        <ion-item lines="none" class="field-item">
+          <ion-input [(ngModel)]="loginEmail" type="email" placeholder="ejemplo@correo.com"></ion-input>
+        </ion-item>
+      </div>
+      <div class="field-group">
+        <label>Contraseña</label>
+        <ion-item lines="none" class="field-item">
+          <ion-input [(ngModel)]="loginPassword" type="password" placeholder="••••••••"></ion-input>
+        </ion-item>
+      </div>
+      <button class="btn-primary" (click)="iniciarSesion()">Ingresar</button>
+      <p class="link-text">¿Olvidaste tu contraseña?</p>
+    </div>
+
+    <!-- REGISTRO -->
+    <div *ngIf="modo === 'registro'" class="form-body">
+      <div class="field-group">
+        <label>Nombre completo</label>
+        <ion-item lines="none" class="field-item">
+          <ion-input [(ngModel)]="nombre" placeholder="Juan Pérez"></ion-input>
+        </ion-item>
+      </div>
+      <div class="field-group">
+        <label>Correo electrónico</label>
+        <ion-item lines="none" class="field-item">
+          <ion-input [(ngModel)]="emailRegistro" type="email" placeholder="correo@ejemplo.com"></ion-input>
+        </ion-item>
+      </div>
+      <div class="field-group">
+        <label>Contraseña</label>
+        <ion-item lines="none" class="field-item">
+          <ion-input [(ngModel)]="passwordRegistro" type="password" placeholder="••••••••"></ion-input>
+        </ion-item>
+      </div>
+      <button class="btn-primary" (click)="registrar()">Crear cuenta</button>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <p class="version-text">Versión 1.0.0 • AutoCare</p>
+
+</ion-content>

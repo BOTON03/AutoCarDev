@@ -1,0 +1,179 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="top-bar">
+
+      <div class="header-left">
+        <div class="avatar-sm">
+          {{ (usuario?.nombre || 'A').charAt(0) }}
+        </div>
+        <h1 class="page-title">AutoCare</h1>
+      </div>
+
+      <button class="add-btn-circle" (click)="nuevoGasto()">
+        <i class="fas fa-plus"></i>
+      </button>
+
+
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+
+    <div class="total-card">
+      <span class="total-label">Total del mes</span>
+      <div class="total-amount-row">
+        <span class="total-amount">{{ formatMonto(totalMes) }}</span>
+        <span class="total-currency">COP</span>
+      </div>
+      <div class="total-trend">
+        <i class="fas fa-arrow-trend-up"></i>
+        <span>8% más que el mes pasado</span>
+      </div>
+    </div>
+
+    <div class="filtros-scroll">
+      <button
+        class="filtro-btn"
+        [class.active]="categoria === 'todos'"
+        (click)="setCategoria('todos')"
+      >Todos</button>
+      <button
+        class="filtro-btn"
+        [class.active]="categoria === 'combustible'"
+        (click)="setCategoria('combustible')"
+      >Combustible</button>
+      <button
+        class="filtro-btn"
+        [class.active]="categoria === 'seguro'"
+        (click)="setCategoria('seguro')"
+      >Seguro</button>
+      <button
+        class="filtro-btn"
+        [class.active]="categoria === 'revision'"
+        (click)="setCategoria('revision')"
+      >Revisión</button>
+      <button
+        class="filtro-btn"
+        [class.active]="categoria === 'otros'"
+        (click)="setCategoria('otros')"
+      >Otros</button>
+    </div>
+
+    <div class="recientes-header" *ngIf="gastosFiltrados.length > 0">
+      <span>RECIENTES</span>
+    </div>
+
+    <div class="gastos-list" *ngIf="gastosFiltrados.length > 0">
+      <div class="gasto-item" *ngFor="let g of gastosFiltrados">
+
+        <div class="gasto-icon-box" [ngClass]="getIconClass(g.categoria)">
+          <i [class]="getIconoCategoria(g.categoria)"></i>
+        </div>
+
+        <div class="gasto-info">
+          <span class="gasto-nombre">{{ g.descripcion }}</span>
+          <span class="gasto-sub">{{ getNombreVehiculo(g.vehiculoId) }} • {{ g.fecha | date:'dd MMM yyyy' }}</span>
+        </div>
+
+        <div class="gasto-monto-col">
+          <span class="gasto-monto">-{{ formatMonto(g.monto) }}</span>
+          <span class="gasto-cat">{{ getCategoriaLabel(g.categoria) }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="gastosFiltrados.length === 0">
+      <div class="empty-icon-box">
+        <i class="fas fa-money-bill-wave"></i>
+      </div>
+      <h3>No hay gastos registrados</h3>
+      <p>Agrega tu primer gasto presionando el botón +</p>
+    </div>
+
+    <div class="fab-area">
+      <button class="fab-btn" (click)="nuevoGasto()">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'vehiculos'"
+    routerLink="/vehiculos"
+    (click)="activeTab = 'vehiculos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-car-side"></i>
+    </div>
+    <span>Vehículos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'mantenimientos'"
+    routerLink="/mantenimientos"
+    (click)="activeTab = 'mantenimientos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-screwdriver-wrench"></i>
+    </div>
+    <span>Mantenimiento</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'gastos'"
+    routerLink="/gastos"
+    (click)="activeTab = 'gastos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-money-bill-wave"></i>
+    </div>
+    <span>Gastos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'recordatorios'"
+    routerLink="/recordatorios"
+    (click)="activeTab = 'recordatorios'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-bell"></i>
+    </div>
+    <span>Notificaciones</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'estadisticas'"
+    routerLink="/estadisticas"
+    (click)="activeTab = 'estadisticas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <span>Estadísticas</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'perfil'"
+    routerLink="/perfil"
+    (click)="activeTab = 'perfil'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-user"></i>
+    </div>
+    <span>Perfil</span>
+  </div>
+
+</div>

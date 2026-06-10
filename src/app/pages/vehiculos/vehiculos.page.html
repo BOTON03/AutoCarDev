@@ -1,0 +1,175 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="top-bar">
+
+      <div class="header-left">
+        <div class="avatar-sm">
+          {{ (usuario?.nombre || 'U').charAt(0) }}
+        </div>
+        <h1 class="page-title">Mis Vehículos</h1>
+      </div>
+
+      <button class="add-btn-circle" (click)="nuevoVehiculo()">
+        <i class="fas fa-plus"></i>
+      </button>
+
+
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+
+    <div class="vehiculos-list" *ngIf="vehiculos.length > 0">
+      <div
+        class="vehicle-card"
+        *ngFor="let v of vehiculos"
+      >
+
+        <!-- FILA SUPERIOR: ícono + info + badge -->
+        <div class="card-top">
+
+          <div class="car-icon-box" [ngClass]="getIconClass(v)">
+            <i class="fas fa-car"></i>
+          </div>
+
+          <div class="car-info">
+            <div class="car-info-header">
+              <span class="car-placa">{{ v.placa }}</span>
+              <span class="status-badge" [ngClass]="getStatusClass(v.estado)">
+                {{ v.estado }}
+              </span>
+            </div>
+            <span class="car-modelo">{{ v.marca }} {{ v.modelo }} {{ v.anio }}</span>
+            <div class="car-tags">
+              <span class="car-tag">
+                <i class="fas fa-circle-dot"></i> {{ v.color }}
+              </span>
+              <span class="car-tag">
+                <i [class]="getFuelIcon(v.combustible)"></i> {{ v.combustible }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-divider"></div>
+
+        <div class="card-stats">
+
+          <div class="stat-col">
+            <small>Kilometraje</small>
+            <strong>{{ v.kilometraje | number }} km</strong>
+          </div>
+
+          <div class="stat-col stat-right" *ngIf="v.combustible !== 'Eléctrico'">
+            <small>Próximo Service</small>
+            <strong [ngClass]="getServiceClass(v.proximoService)">
+              {{ v.proximoService }}
+            </strong>
+          </div>
+
+          <div class="stat-col stat-right" *ngIf="v.combustible === 'Eléctrico'">
+            <small>Batería</small>
+            <strong>{{ v.bateria }}%</strong>
+          </div>
+
+        </div>
+
+        <div class="card-divider"></div>
+
+        <div class="card-footer" (click)="verDetalle(v)">
+          <span>Ver detalle</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="vehiculos.length === 0">
+      <div class="empty-icon-box">
+        <i class="fas fa-car"></i>
+      </div>
+      <h3>No tienes vehículos registrados</h3>
+      <p>Agrega tu primer vehículo presionando el botón +</p>
+    </div>
+
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'vehiculos'"
+    routerLink="/vehiculos"
+    (click)="activeTab = 'vehiculos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-car-side"></i>
+    </div>
+    <span>Vehículos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'mantenimientos'"
+    routerLink="/mantenimientos"
+    (click)="activeTab = 'mantenimientos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-screwdriver-wrench"></i>
+    </div>
+    <span>Mantenimiento</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'gastos'"
+    routerLink="/gastos"
+    (click)="activeTab = 'gastos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-money-bill-wave"></i>
+    </div>
+    <span>Gastos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'recordatorios'"
+    routerLink="/recordatorios"
+    (click)="activeTab = 'recordatorios'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-bell"></i>
+    </div>
+    <span>Notificaciones</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'estadisticas'"
+    routerLink="/estadisticas"
+    (click)="activeTab = 'estadisticas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <span>Estadísticas</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'perfil'"
+    routerLink="/perfil"
+    (click)="activeTab = 'perfil'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-user"></i>
+    </div>
+    <span>Perfil</span>
+  </div>
+
+</div>

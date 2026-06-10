@@ -1,0 +1,114 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="top-bar">
+      <div class="header-left">
+        <i class="fas fa-car header-car-icon"></i>
+        <h1 class="page-title">Recordatorios</h1>
+      </div>
+      <button class="add-btn-circle" (click)="nuevoRecordatorio()">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+
+    <div class="leyenda-row">
+      <span class="leyenda-item">
+        <span class="dot dot-green"></span> +30 días
+      </span>
+      <span class="leyenda-item">
+        <span class="dot dot-yellow"></span> 10-30 días
+      </span>
+      <span class="leyenda-item">
+        <span class="dot dot-red"></span> &lt;10 días
+      </span>
+    </div>
+
+    <div class="empty-state" *ngIf="recordatorios.length === 0">
+      <div class="empty-icon-box">
+        <i class="fas fa-chart-bar"></i>
+      </div>
+      <p>Gestionando {{ vehiculosActivos }} vehículos activos</p>
+    </div>
+
+  </div>
+</ion-content>
+
+<div class="bottom-nav">
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'vehiculos'"
+    routerLink="/tabs/vehiculos"
+    (click)="activeTab = 'vehiculos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-car-side"></i>
+    </div>
+    <span>Vehículos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'mantenimientos'"
+    routerLink="/mantenimientos"
+    (click)="activeTab = 'mantenimientos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-screwdriver-wrench"></i>
+    </div>
+    <span>Mantenimiento</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'gastos'"
+    routerLink="/gastos"
+    (click)="activeTab = 'gastos'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-money-bill-wave"></i>
+    </div>
+    <span>Gastos</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'recordatorios'"
+    routerLink="/recordatorios"
+    (click)="activeTab = 'recordatorios'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-bell"></i>
+    </div>
+    <span>Notificaciones</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'estadisticas'"
+    routerLink="/estadisticas"
+    (click)="activeTab = 'estadisticas'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <span>Estadísticas</span>
+  </div>
+
+  <div
+    class="nav-item"
+    [class.active]="activeTab === 'perfil'"
+    routerLink="/perfil"
+    (click)="activeTab = 'perfil'"
+  >
+    <div class="nav-icon">
+      <i class="fas fa-user"></i>
+    </div>
+    <span>Perfil</span>
+  </div>
+
+</div>
