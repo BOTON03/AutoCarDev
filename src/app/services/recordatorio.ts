@@ -10,7 +10,7 @@ export class RecordatorioService {
   async generarRecordatoriosAutomaticos() {
     const mantenimientos = (await this.storage.get('mantenimientos')) || [];
     const vehiculos = (await this.storage.get('vehiculos')) || [];
-    let recordatorios = (await this.storage.get('recordatorios')) || [];
+    const recordatorios = (await this.storage.get('recordatorios')) || [];
 
     for (const mantenimiento of mantenimientos) {
       if (mantenimiento.recordatorioActivo && mantenimiento.proximaFecha) {
