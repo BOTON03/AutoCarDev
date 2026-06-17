@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth';
 
-export const authGuard = async (p0: RouterStateSnapshot | ActivatedRouteSnapshot) => {
+export const authGuard = async (_route: RouterStateSnapshot | ActivatedRouteSnapshot) => {
   const authService = inject(AuthService) as AuthService;
   const router = inject(Router);
   

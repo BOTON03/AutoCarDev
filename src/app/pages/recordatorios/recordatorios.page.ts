@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
@@ -122,7 +122,7 @@ export class RecordatoriosPage implements OnInit {
     return 'green';
   }
 
-  getCardClass(r: any): string    { return ''; }
+  getCardClass(_r: any): string    { return ''; }
   getBorderClass(r: any): string  { return `border-${this.getUrgencia(r)}`; }
   getIconBgClass(r: any): string  { return `icon-bg-${this.getUrgencia(r)}`; }
   getIconColorClass(r: any): string { return `icon-color-${this.getUrgencia(r)}`; }
