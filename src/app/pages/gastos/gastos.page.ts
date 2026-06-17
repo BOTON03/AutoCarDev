@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { StorageService } from '../../services/storage';
+import { AuthService } from '../../services/auth';
+import { UiService } from '../../services/ui';
 import { GastoFormComponent } from '../../components/gasto-form/gasto-form.component';
 
 @Component({
@@ -42,6 +44,8 @@ export class GastosPage implements OnInit {
 
   constructor(
     private storage: StorageService,
+    private auth: AuthService,
+    private ui: UiService,
     private modalController: ModalController
   ) {}
 
@@ -56,7 +60,7 @@ export class GastosPage implements OnInit {
   async cargarDatos() {
     this.gastos    = (await this.storage.get('gastos'))    || [];
     this.vehiculos = (await this.storage.get('vehiculos')) || [];
-    this.usuario   = (await this.storage.get('usuario'))   || null;
+    this.usuario   = await this.auth.getCurrentUser();
     this.filtrarGastos();
   }
 
@@ -134,7 +138,7 @@ export class GastosPage implements OnInit {
 
   async nuevoGasto() {
     if (this.vehiculos.length === 0) {
-      alert('Primero debe registrar un vehículo');
+      await this.ui.showAlert('Primero debe registrar un vehículo');
       return;
     }
     const modal = await this.modalController.create({
@@ -151,7 +155,8 @@ export class GastosPage implements OnInit {
   }
 
   async eliminarGasto(gasto: any) {
-    if (confirm('¿Eliminar este gasto?')) {
+    const ok = await this.ui.confirm('¿Eliminar este gasto?');
+    if (ok) {
       this.gastos = this.gastos.filter(g => g.id !== gasto.id);
       await this.storage.set('gastos', this.gastos);
       await this.cargarDatos();

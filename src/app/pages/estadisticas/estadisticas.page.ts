@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { StorageService } from '../../services/storage';
+import { UiService } from '../../services/ui';
 
 @Component({
   selector: 'app-estadisticas',
@@ -57,7 +58,7 @@ export class EstadisticasPage implements OnInit {
 
   private readonly donutColors: string[] = ['#5b9bff', '#4dcfff', '#7b6cff', '#5a7399'];
 
-  constructor(private storage: StorageService) {}
+  constructor(private storage: StorageService, private ui: UiService) {}
 
   async ngOnInit() {
     await this.cargarDatos();
@@ -143,11 +144,11 @@ export class EstadisticasPage implements OnInit {
     });
   }
 
-  compartir() {
-    alert('Compartir estadísticas');
+  async compartir() {
+    await this.ui.showToast('Compartir estadísticas');
   }
 
-  exportarPDF() {
-    alert('Exportando reporte en PDF...');
+  async exportarPDF() {
+    await this.ui.showToast('Exportando reporte en PDF...');
   }
 }

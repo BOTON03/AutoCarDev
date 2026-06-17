@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../services/auth';
+import { UiService } from '../../services/ui';
 
 @Component({
   selector: 'app-register',
@@ -18,15 +19,23 @@ export class RegisterPage {
   password = '';
   confirmPassword = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private ui: UiService
+  ) {}
 
   async registrar() {
     if (this.password !== this.confirmPassword) {
-      alert('Las contraseñas no coinciden');
+      await this.ui.showAlert('Las contraseñas no coinciden');
       return;
     }
-    await this.auth.register({ nombre: this.nombre, email: this.email, password: this.password });
-    alert('Usuario registrado');
-    this.router.navigate(['/login']);
+    try {
+      await this.auth.register({ nombre: this.nombre, email: this.email, password: this.password });
+      await this.ui.showToast('Usuario registrado', 'success');
+      this.router.navigate(['/login']);
+    } catch (error: any) {
+      await this.ui.showAlert(error.message || 'No se pudo registrar el usuario');
+    }
   }
 }

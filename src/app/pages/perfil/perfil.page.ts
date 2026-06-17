@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { StorageService } from '../../services/storage';
+import { AuthService } from '../../services/auth';
+import { UiService } from '../../services/ui';
+import { NotificationService } from '../../services/notification';
 
 @Component({
   selector: 'app-perfil',
@@ -24,7 +27,9 @@ export class PerfilPage implements OnInit {
 
   constructor(
     private storage: StorageService,
-    private router: Router
+    private auth: AuthService,
+    private ui: UiService,
+    private notificationService: NotificationService
   ) {}
 
   async ngOnInit() {
@@ -36,7 +41,7 @@ export class PerfilPage implements OnInit {
   }
 
   async cargarDatos() {
-    this.usuario    = (await this.storage.get('usuario'))    || null;
+    this.usuario    = await this.auth.getCurrentUser();
     this.vehiculos  = (await this.storage.get('vehiculos'))  || [];
     const config    = (await this.storage.get('config'))     || {};
     this.notificaciones = config.notificaciones ?? true;
@@ -59,6 +64,9 @@ export class PerfilPage implements OnInit {
       unidades:       this.unidades,
       moneda:         this.moneda
     });
+    const recordatorios = (await this.storage.get('recordatorios')) || [];
+    await this.notificationService.syncRecordatorios(recordatorios);
+    await this.ui.showToast('Preferencias guardadas', 'success');
   }
 
   async cambiarUnidades() {
@@ -74,17 +82,17 @@ export class PerfilPage implements OnInit {
   }
 
   async respaldarDatos() {
-    alert('Función de respaldo próximamente');
+    await this.ui.showAlert('Función de respaldo próximamente');
   }
 
-  editarPerfil() {
-    alert('Editar perfil próximamente');
+  async editarPerfil() {
+    await this.ui.showAlert('Editar perfil próximamente');
   }
 
   async cerrarSesion() {
-    if (confirm('¿Cerrar sesión?')) {
-      await this.storage.set('usuario', null);
-      this.router.navigate(['/login']);
+    const ok = await this.ui.confirm('¿Cerrar sesión?');
+    if (ok) {
+      await this.auth.logout();
     }
   }
 }

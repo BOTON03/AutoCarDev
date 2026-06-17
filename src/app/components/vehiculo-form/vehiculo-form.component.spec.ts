@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { provideIonicTesting } from '../../testing/ionic-testing';
 
 import { VehiculoFormComponent } from './vehiculo-form.component';
 
@@ -9,6 +10,7 @@ describe('VehiculoFormComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [VehiculoFormComponent],
+      providers: [provideIonicTesting()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(VehiculoFormComponent);
