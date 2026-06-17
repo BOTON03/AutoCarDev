@@ -1,39 +1,87 @@
 import { Injectable } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
-  private storage: Storage | null = null;
+  private memory = new Map<string, string>();
+  private ready: Promise<void>;
 
   constructor() {
-    this.init();
+    this.ready = this.init();
   }
 
-  async init() {
-    if (typeof window !== 'undefined' && 'localStorage' in window) {
-      this.storage = window.localStorage;
+  private async init(): Promise<void> {
+    try {
+      const { keys } = await Preferences.keys();
+      for (const key of keys) {
+        const { value } = await Preferences.get({ key });
+        if (value !== null) {
+          this.memory.set(key, value);
+        }
+      }
+    } catch {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        for (let i = 0; i < window.localStorage.length; i++) {
+          const key = window.localStorage.key(i);
+          if (key) {
+            const value = window.localStorage.getItem(key);
+            if (value !== null) {
+              this.memory.set(key, value);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private async persist(key: string, value: string | null): Promise<void> {
+    try {
+      if (value === null) {
+        await Preferences.remove({ key });
+      } else {
+        await Preferences.set({ key, value });
+      }
+    } catch {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        if (value === null) {
+          window.localStorage.removeItem(key);
+        } else {
+          window.localStorage.setItem(key, value);
+        }
+      }
     }
   }
 
   async get(key: string): Promise<any> {
-    if (!this.storage) return null;
-    const value = this.storage.getItem(key);
+    await this.ready;
+    const value = this.memory.get(key);
     return value ? JSON.parse(value) : null;
   }
 
   async set(key: string, value: any): Promise<void> {
-    if (!this.storage) return;
-    this.storage.setItem(key, JSON.stringify(value));
+    await this.ready;
+    const serialized = JSON.stringify(value);
+    this.memory.set(key, serialized);
+    await this.persist(key, serialized);
   }
 
   async remove(key: string): Promise<void> {
-    if (!this.storage) return;
-    this.storage.removeItem(key);
+    await this.ready;
+    this.memory.delete(key);
+    await this.persist(key, null);
   }
 
   async clear(): Promise<void> {
-    if (!this.storage) return;
-    this.storage.clear();
+    await this.ready;
+    this.memory.clear();
+    try {
+      await Preferences.clear();
+    } catch {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.clear();
+      }
+    }
   }
 }

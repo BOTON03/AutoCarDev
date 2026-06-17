@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { provideIonicTesting } from '../../testing/ionic-testing';
 
-import { VehiculoFormComponent } from './recordatorio-form.component';
+import { RecordatorioFormComponent } from './recordatorio-form.component';
 
-describe('VehiculoFormComponent', () => {
-  let component: VehiculoFormComponent;
-  let fixture: ComponentFixture<VehiculoFormComponent>;
+describe('RecordatorioFormComponent', () => {
+  let component: RecordatorioFormComponent;
+  let fixture: ComponentFixture<RecordatorioFormComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [VehiculoFormComponent],
+      imports: [RecordatorioFormComponent],
+      providers: [provideIonicTesting()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(VehiculoFormComponent);
+    fixture = TestBed.createComponent(RecordatorioFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

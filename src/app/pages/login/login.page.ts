@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../services/auth';
+import { UiService } from '../../services/ui';
 
 @Component({
   selector: 'app-login',
@@ -20,33 +21,41 @@ export class LoginPage {
   emailRegistro = '';
   passwordRegistro = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private ui: UiService
+  ) {}
 
   async iniciarSesion() {
     if (!this.loginEmail || !this.loginPassword) {
-      alert('Complete todos los campos');
+      await this.ui.showAlert('Complete todos los campos');
       return;
     }
     const ok = await this.auth.login(this.loginEmail, this.loginPassword);
     if (ok) {
       this.router.navigate(['/dashboard']);
     } else {
-      alert('Credenciales incorrectas');
+      await this.ui.showAlert('Credenciales incorrectas');
     }
   }
 
   async registrar() {
     if (!this.nombre || !this.emailRegistro || !this.passwordRegistro) {
-      alert('Complete todos los campos');
+      await this.ui.showAlert('Complete todos los campos');
       return;
     }
-    await this.auth.register({
-      nombre: this.nombre,
-      email: this.emailRegistro,
-      password: this.passwordRegistro
-    });
-    alert('Usuario registrado. Inicia sesión.');
-    this.modo = 'login';
-    this.loginEmail = this.emailRegistro;
+    try {
+      await this.auth.register({
+        nombre: this.nombre,
+        email: this.emailRegistro,
+        password: this.passwordRegistro
+      });
+      await this.ui.showToast('Usuario registrado. Inicia sesión.', 'success');
+      this.modo = 'login';
+      this.loginEmail = this.emailRegistro;
+    } catch (error: any) {
+      await this.ui.showAlert(error.message || 'No se pudo registrar el usuario');
+    }
   }
 }

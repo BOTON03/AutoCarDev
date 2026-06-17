@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../../services/storage';
 import { VehiculoFormComponent } from '../../components/vehiculo-form/vehiculo-form.component';
 import { MantenimientoFormComponent } from '../../components/mantenimiento-form/mantenimiento-form.component';
+import { UiService } from '../../services/ui';
 
 @Component({
   selector: 'app-vehiculo-detalle',
@@ -26,7 +27,8 @@ export class VehiculoDetallePage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private storage: StorageService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private ui: UiService
   ) {}
 
   async ngOnInit() {
@@ -43,26 +45,26 @@ export class VehiculoDetallePage implements OnInit {
     const todosMant     = (await this.storage.get('mantenimientos')) || [];
     const todosGastos   = (await this.storage.get('gastos'))         || [];
 
-    this.vehiculo = this.todosVehiculos.find(v => v.id === id) || null;
+    this.vehiculo = this.todosVehiculos.find(v => String(v.id) === id) || null;
 
     if (this.vehiculo) {
       this.mantenimientos = todosMant
-        .filter((m: any) => m.vehiculoId === id)
+        .filter((m: any) => String(m.vehiculoId) === id)
         .sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
       this.gastos = todosGastos
-        .filter((g: any) => g.vehiculoId === id)
+        .filter((g: any) => String(g.vehiculoId) === id)
         .sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
         .slice(0, 5);
 
       this.gastoTotal = todosGastos
-        .filter((g: any) => g.vehiculoId === id)
+        .filter((g: any) => String(g.vehiculoId) === id)
         .reduce((sum: number, g: any) => sum + (g.monto || 0), 0);
     }
   }
 
   volver() {
-    this.router.navigate(['/tabs/vehiculos']);
+    this.router.navigate(['/vehiculos']);
   }
 
   async editar() {
@@ -85,10 +87,12 @@ export class VehiculoDetallePage implements OnInit {
 
   async eliminar() {
     if (!this.vehiculo) return;
-    if (confirm(`¿Eliminar vehículo ${this.vehiculo.placa}?`)) {
+    const ok = await this.ui.confirm(`¿Eliminar vehículo ${this.vehiculo.placa}?`);
+    if (ok) {
       const actualizados = this.todosVehiculos.filter(v => v.id !== this.vehiculo.id);
       await this.storage.set('vehiculos', actualizados);
-      this.router.navigate(['/tabs/vehiculos']);
+      await this.ui.showToast('Vehículo eliminado', 'success');
+      this.router.navigate(['/vehiculos']);
     }
   }
 

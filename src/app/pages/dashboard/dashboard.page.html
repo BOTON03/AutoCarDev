@@ -34,11 +34,11 @@
 
       <h2 class="plate-text">{{ vehiculoPrincipal.placa }}</h2>
 
-      <div class="alert-box">
+      <div class="alert-box" *ngIf="proximoMantenimiento">
         <i class="fas fa-triangle-exclamation"></i>
         <div>
           <small>Mantenimiento Próximo</small>
-          <strong>Cambio de aceite - En 15 días</strong>
+          <strong>{{ proximoMantenimientoTexto }}</strong>
         </div>
       </div>
 
@@ -79,7 +79,7 @@
       <div class="progress-bar">
         <div class="progress-fill"></div>
       </div>
-      <p class="gasto-note">15% más que el mes pasado</p>
+      <p class="gasto-note">{{ variacionGastosTexto }}</p>
     </div>
 
   </div>

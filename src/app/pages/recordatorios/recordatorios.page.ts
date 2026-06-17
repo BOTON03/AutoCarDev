@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { StorageService } from '../../services/storage';
+import { RecordatorioService } from '../../services/recordatorio';
+import { NotificationService } from '../../services/notification';
+import { UiService } from '../../services/ui';
 import { RecordatorioFormComponent } from '../../components/recordatorio-form/recordatorio-form.component';
 
 @Component({
@@ -22,6 +25,9 @@ export class RecordatoriosPage implements OnInit {
 
   constructor(
     private storage: StorageService,
+    private recordatorioService: RecordatorioService,
+    private notificationService: NotificationService,
+    private ui: UiService,
     private modalController: ModalController
   ) {}
 
@@ -34,7 +40,9 @@ export class RecordatoriosPage implements OnInit {
   }
 
   async cargarDatos() {
-    this.recordatorios = (await this.storage.get('recordatorios')) || [];
+    await this.recordatorioService.generarRecordatoriosAutomaticos();
+    const todos = (await this.storage.get('recordatorios')) || [];
+    this.recordatorios = todos.filter((r: any) => r.estado !== 'completado');
     this.vehiculos     = (await this.storage.get('vehiculos'))     || [];
     this.vehiculosActivos = this.vehiculos.filter(
       v => v.estado?.toLowerCase() === 'activo'
@@ -42,11 +50,12 @@ export class RecordatoriosPage implements OnInit {
     this.recordatorios.sort(
       (a, b) => new Date(a.fechaVencimiento).getTime() - new Date(b.fechaVencimiento).getTime()
     );
+    await this.notificationService.syncRecordatorios(todos);
   }
 
   async nuevoRecordatorio() {
     if (this.vehiculos.length === 0) {
-      alert('Primero debe registrar un vehículo');
+      await this.ui.showAlert('Primero debe registrar un vehículo');
       return;
     }
 
@@ -59,9 +68,11 @@ export class RecordatoriosPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     if (data) {
-      this.recordatorios.push(data);
-      await this.storage.set('recordatorios', this.recordatorios);
+      const todos = (await this.storage.get('recordatorios')) || [];
+      todos.push(data);
+      await this.storage.set('recordatorios', todos);
       await this.cargarDatos();
+      await this.ui.showToast('Recordatorio creado', 'success');
     }
   }
 
@@ -78,34 +89,39 @@ export class RecordatoriosPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     if (data) {
-      const index = this.recordatorios.findIndex(rec => rec.id === r.id);
+      const todos = (await this.storage.get('recordatorios')) || [];
+      const index = todos.findIndex((rec: any) => rec.id === r.id);
       if (index !== -1) {
-        this.recordatorios[index] = data;
-        await this.storage.set('recordatorios', this.recordatorios);
+        todos[index] = data;
+        await this.storage.set('recordatorios', todos);
         await this.cargarDatos();
+        await this.ui.showToast('Recordatorio actualizado', 'success');
       }
     }
   }
 
   async completar(r: any) {
-    r.estado = 'completado';
-    await this.storage.set('recordatorios', this.recordatorios);
+    await this.recordatorioService.marcarCompletado(r);
+    await this.notificationService.cancelReminder(r.id);
     await this.cargarDatos();
+    await this.ui.showToast('Recordatorio completado', 'success');
   }
 
   async posponer(r: any) {
-    const fecha = new Date(r.fechaVencimiento);
-    fecha.setDate(fecha.getDate() + 7);
-    r.fechaVencimiento = fecha.toISOString();
-    await this.storage.set('recordatorios', this.recordatorios);
+    await this.recordatorioService.posponerRecordatorio(r, 7);
     await this.cargarDatos();
+    await this.ui.showToast('Recordatorio pospuesto 7 días', 'warning');
   }
 
   async eliminarRecordatorio(r: any) {
-    if (confirm('¿Eliminar este recordatorio?')) {
-      this.recordatorios = this.recordatorios.filter(rec => rec.id !== r.id);
-      await this.storage.set('recordatorios', this.recordatorios);
+    const ok = await this.ui.confirm('¿Eliminar este recordatorio?');
+    if (ok) {
+      const todos = (await this.storage.get('recordatorios')) || [];
+      const actualizados = todos.filter((rec: any) => rec.id !== r.id);
+      await this.storage.set('recordatorios', actualizados);
+      await this.notificationService.cancelReminder(r.id);
       await this.cargarDatos();
+      await this.ui.showToast('Recordatorio eliminado', 'success');
     }
   }
 
@@ -131,5 +147,13 @@ export class RecordatoriosPage implements OnInit {
   getPlaca(r: any): string {
     const v = this.vehiculos.find(v => v.id === r.vehiculoId);
     return v ? v.placa : '';
+  }
+
+  getDiasTexto(r: any): string {
+    const dias = this.getDiasRestantes(r);
+    if (dias < 0) return 'Vencido';
+    if (dias === 0) return 'Hoy';
+    if (dias === 1) return '1 día';
+    return `${dias} días`;
   }
 }

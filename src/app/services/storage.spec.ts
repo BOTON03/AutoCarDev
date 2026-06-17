@@ -1,16 +1,25 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Storage } from './storage';
+import { StorageService } from './storage';
 
-describe('Storage', () => {
-  let service: Storage;
+describe('StorageService', () => {
+  let service: StorageService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Storage);
+    TestBed.configureTestingModule({
+      providers: [StorageService]
+    });
+    service = TestBed.inject(StorageService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should persist and retrieve values', async () => {
+    await service.set('test-key', { nombre: 'AutoCare' });
+    const value = await service.get('test-key');
+    expect(value).toEqual({ nombre: 'AutoCare' });
+    await service.remove('test-key');
   });
 });

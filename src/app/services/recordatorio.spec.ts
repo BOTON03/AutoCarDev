@@ -1,14 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import { describe, it, beforeEach, expect } from '@jest/globals';
 
-import { Recordatorio } from './recordatorio';
+import { RecordatorioService } from './recordatorio';
+import { StorageService } from './storage';
 
-describe('Recordatorio', () => {
-  let service: Recordatorio;
+describe('RecordatorioService', () => {
+  let service: RecordatorioService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Recordatorio);
+    TestBed.configureTestingModule({
+      providers: [RecordatorioService, StorageService]
+    });
+    service = TestBed.inject(RecordatorioService);
   });
 
   it('should be created', () => {

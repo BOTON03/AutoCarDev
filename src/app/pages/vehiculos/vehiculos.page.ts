@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { StorageService } from '../../services/storage';
+import { AuthService } from '../../services/auth';
+import { UiService } from '../../services/ui';
 import { VehiculoFormComponent } from '../../components/vehiculo-form/vehiculo-form.component';
-// VehiculoDetalleFormComponent imported dynamically in verDetalle to avoid build-time module not found errors
 
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.page.html',
   styleUrls: ['./vehiculos.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule]
 })
 export class VehiculosPage implements OnInit {
 
@@ -22,6 +23,8 @@ export class VehiculosPage implements OnInit {
 
   constructor(
     private storage: StorageService,
+    private auth: AuthService,
+    private ui: UiService,
     private modalController: ModalController,
     private router: Router
   ) {}
@@ -35,6 +38,7 @@ export class VehiculosPage implements OnInit {
   }
 
   async cargarVehiculos() {
+    this.usuario = await this.auth.getCurrentUser();
     this.vehiculos = (await this.storage.get('vehiculos')) || [];
   }
 
@@ -76,22 +80,17 @@ export class VehiculosPage implements OnInit {
   }
 
   async eliminarVehiculo(vehiculo: any) {
-    if (confirm(`¿Eliminar vehículo ${vehiculo.placa}?`)) {
+    const ok = await this.ui.confirm(`¿Eliminar vehículo ${vehiculo.placa}?`);
+    if (ok) {
       this.vehiculos = this.vehiculos.filter(v => v.id !== vehiculo.id);
       await this.storage.set('vehiculos', this.vehiculos);
       await this.cargarVehiculos();
+      await this.ui.showToast('Vehículo eliminado', 'success');
     }
   }
 
-  async verDetalle(vehiculo: any) {
-    const modal = await this.modalController.create({
-      component: VehiculoFormComponent,
-      componentProps: {
-        vehiculo
-      }
-    });
-
-    await modal.present();
+  verDetalle(vehiculo: any) {
+    this.router.navigate(['/vehiculos', vehiculo.id]);
   }
 
   getIconClass(v: any): string {

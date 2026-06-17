@@ -27,6 +27,39 @@
       </span>
     </div>
 
+    <div class="alertas-list" *ngIf="recordatorios.length > 0">
+      <div class="alerta-card" *ngFor="let r of recordatorios">
+        <div class="card-border" [ngClass]="getBorderClass(r)"></div>
+        <div class="card-body">
+          <div class="alerta-top">
+            <div class="alerta-icon-box" [ngClass]="getIconBgClass(r)">
+              <i class="fas fa-bell" [ngClass]="getIconColorClass(r)"></i>
+            </div>
+            <div class="alerta-info">
+              <div class="alerta-header-row">
+                <span class="alerta-nombre">{{ r.titulo }}</span>
+                <span class="dias-badge" [ngClass]="getDiasBadgeClass(r)">{{ getDiasTexto(r) }}</span>
+              </div>
+              <span class="alerta-sub" *ngIf="getPlaca(r)">{{ getPlaca(r) }}</span>
+              <span class="alerta-sub" *ngIf="r.descripcion">{{ r.descripcion }}</span>
+              <div class="alerta-vence">
+                <i class="fas fa-calendar"></i>
+                <span>Vence: {{ r.fechaVencimiento }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="alerta-actions">
+            <button class="btn-completar" (click)="completar(r)">
+              <i class="fas fa-check"></i> Completar
+            </button>
+            <button class="btn-posponer" (click)="posponer(r)">
+              <i class="fas fa-clock"></i> +7 días
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="empty-state" *ngIf="recordatorios.length === 0">
       <div class="empty-icon-box">
         <i class="fas fa-chart-bar"></i>
@@ -42,7 +75,7 @@
   <div
     class="nav-item"
     [class.active]="activeTab === 'vehiculos'"
-    routerLink="/tabs/vehiculos"
+    routerLink="/vehiculos"
     (click)="activeTab = 'vehiculos'"
   >
     <div class="nav-icon">

@@ -5,6 +5,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { StorageService } from '../../services/storage';
 import { RecordatorioService } from '../../services/recordatorio';
+import { UiService } from '../../services/ui';
 import { MantenimientoFormComponent } from '../../components/mantenimiento-form/mantenimiento-form.component';
 
 @Component({
@@ -25,6 +26,7 @@ export class MantenimientosPage implements OnInit {
   constructor(
     private storage: StorageService,
     private modalController: ModalController,
+    private ui: UiService,
     @Inject(RecordatorioService) private recordatorioService: RecordatorioService
   ) {}
 
@@ -96,7 +98,7 @@ export class MantenimientosPage implements OnInit {
 
   async nuevoMantenimiento() {
     if (this.vehiculos.length === 0) {
-      alert('Primero debe registrar un vehículo');
+      await this.ui.showAlert('Primero debe registrar un vehículo');
       return;
     }
     const modal = await this.modalController.create({
@@ -122,7 +124,8 @@ export class MantenimientosPage implements OnInit {
   }
 
   async eliminarMantenimiento(mantenimiento: any) {
-    if (confirm('¿Eliminar este mantenimiento?')) {
+    const ok = await this.ui.confirm('¿Eliminar este mantenimiento?');
+    if (ok) {
       this.mantenimientos = this.mantenimientos.filter(
         m => m.id !== mantenimiento.id
       );
