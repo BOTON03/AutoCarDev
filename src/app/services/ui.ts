@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class UiService {
+
   constructor(
     private alertController: AlertController,
     private toastController: ToastController
@@ -15,6 +18,7 @@ export class UiService {
       color,
       position: 'top'
     });
+
     await toast.present();
   }
 
@@ -24,20 +28,29 @@ export class UiService {
       message,
       buttons: ['OK']
     });
+
     await alert.present();
   }
 
   async confirm(message: string, header = 'Confirmar'): Promise<boolean> {
-    return new Promise<boolean>(async (resolve) => {
-      const alert = await this.alertController.create({
+    return new Promise<boolean>((resolve) => {
+      this.alertController.create({
         header,
         message,
         buttons: [
-          { text: 'Cancelar', role: 'cancel', handler: () => resolve(false) },
-          { text: 'Confirmar', handler: () => resolve(true) }
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            handler: () => resolve(false)
+          },
+          {
+            text: 'Confirmar',
+            handler: () => resolve(true)
+          }
         ]
-      });
-      await alert.present();
+      })
+      .then(alert => alert.present())
+      .catch(() => resolve(false));
     });
   }
 }
